@@ -1,0 +1,10 @@
+[{"id":1,"title":"Cave, The","genre":"Action|Adventure|Horror|Mystery|Sci-Fi|Thriller","stock":3,"rate":9},
+{"id":2,"title":"Cop and ½","genre":"Comedy","stock":2,"rate":3},
+{"id":3,"title":"African Queen, The","genre":"Adventure|Comedy|Romance|War","stock":7,"rate":9},
+{"id":4,"title":"Seven Years Bad Luck","genre":"Comedy","stock":3,"rate":5},
+{"id":5,"title":"Life After Beth","genre":"Comedy|Horror|Romance","stock":1,"rate":5},
+{"id":6,"title":"Moving Out","genre":"Drama","stock":8,"rate":7},
+{"id":7,"title":"Romeo Must Die","genre":"Action|Crime|Romance|Thriller","stock":9,"rate":5},
+{"id":8,"title":"Cape Fear","genre":"Crime|Drama|Thriller","stock":6,"rate":8},
+{"id":9,"title":"Robe, The","genre":"Drama","stock":8,"rate":6},
+{"id":10,"title":"Seduced and Abandoned","genre":"Comedy|Documentary","stock":9,"rate":4}]

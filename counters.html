@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My First App</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+    <!-- <script src="https://unpkg.com/bazar@0.5.2/dist/bazar.js"></script> -->
+</head>
+
+<body>
+
+
+    <div id='counter'></div>
+
+    <script src="https://unpkg.com/react@16/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"></script>
+
+    <script type="text/babel">
+        const Counter = (props) => {
+
+            // console.log(props)
+            return (<div>
+                <h2 >Hi, I am a Car {props.counter.id}!</h2>
+                <h2 >Hi, I am a Car value{props.counter.value}!</h2>
+                <span>
+                    <button onClick={() => props.ondelete(props.counter.id)}>Delete</button>
+                    <button onClick={() => props.onincrement(props.counter)}>increment</button>
+                </span>
+            </div>)
+        }
+
+    </script>
+
+    <script type="text/babel">
+
+        class Counters extends React.Component {
+            constructor() {
+                super();
+                this.state = {
+                    counter:
+                        [
+                            { id: 1, value: 0 },
+                            { id: 2, value: 0 },
+                            { id: 3, value: 0 },
+                            { id: 4, value: 0 },
+                        ]
+                }
+            }
+            onclickIncrement = (count) => {
+                const counters = [...this.state.counter]
+                const ix = counters.indexOf(count)
+                counters[ix] = { ...count }
+                counters[ix].value++
+                this.setState({ counter: counters },
+                    () => {
+                        console.log('updates', counter)
+                    })
+
+            }
+
+            onclickreset = () => {
+                const counters = [...this.state.counter]
+                const counter = counters.map(c => {
+                    if (c.value != 0) { c.value = 0; return c }
+                    else return c
+                })
+                console.log(counter)
+                this.setState({ counter })
+            }
+
+
+            onclickDelete = (counter_id) => {
+                console.log(counter_id)
+                const counter = this.state.counter.filter(c =>
+                    c.id != counter_id
+                )
+                this.setState({ counter })
+            }
+            render() {
+                return <div>hello, I am a counters
+                    <button type="reset" onClick={() => { this.onclickreset() }}>RESET</button>
+                    {
+                        this.state.counter.map(val => {
+                            // console.log(val.id, val.value)
+                            return (< Counter
+                                key={val.id}
+                                ondelete={this.onclickDelete}
+                                onincrement={this.onclickIncrement}
+                                counter={val} />)
+                        })
+                    }
+
+                </div>;
+            }
+        }
+
+
+        ReactDOM.render(<Counters />, document.querySelector('#counter'));
+    </script>
+
+</body>
+
+</html>

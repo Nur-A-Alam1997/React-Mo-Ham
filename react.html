@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>My First App</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.24.0/babel.js"></script>
+  <!-- <script src="https://unpkg.com/bazar@0.5.2/dist/bazar.js"></script> -->
+</head>
+
+<body>
+
+  <div id='clock'></div>
+  <div id='movies'></div>
+
+
+  <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react.js"></script>
+  <script src="https://cdn.jsdelivr.net/react/0.14.0-rc1/react-dom.js"></script>
+
+
+  <!-- <script type="text/babel">
+      
+    </script> -->
+  <script type="text/babel">
+    class ClockFunction extends React.Component {
+
+      constructor() {
+        super();
+        this.state = { time: new Date() }; // initialise the state
+      }
+
+      componentDidMount() { // create the interval once component is mounted
+        this.update = setInterval(() => {
+          this.setState({ time: new Date() });
+        }, 1 * 1000); // every 1 seconds
+      }
+
+      componentWillUnmount() { // delete the interval just before component is removed
+        clearInterval(this.update);
+      }
+
+      render() {
+        const { time } = this.state; // retrieve the time from state
+
+        return (<div>
+          <h1>Digital Clock</h1>
+          <h2>
+            {/* print the string prettily */}
+            {time.toLocaleTimeString()}
+          </h2>
+        </div>);
+      }
+    }
+    // ReactDOM.render(<ClockFunction />, document.querySelector('#clock'));
+
+  </script>
+  <script type="text/babel">
+
+    class Counter extends React.Component {
+      constructor() {
+        super();
+        this.state = { value: true };
+      }
+
+      handler() {
+        const { value } = this.state
+        if (value) {
+          this.setState({
+            value: false
+          })
+        }
+        else {
+          this.setState({
+            value: true
+          })
+        }
+      }
+
+
+      sta() {
+        const { value } = this.state
+        return value === true ? "pressed" : "fuck";
+      }
+      render() {
+        return (
+          <span>
+            <ClockFunction />
+            <h1>
+              my value is {this.sta()}
+            </h1>
+            <button onClick={() => { this.handler() }} >  press me </button>
+          </span>
+        );
+      }
+    }
+    ReactDOM.render(<Counter />, document.querySelector('#clock'));
+
+  </script>
+
+  <script type="text/babel">
+    const movies = [{ "id": 1, "tittle": "Cave, The", "genre": "Action|Adventure|Horror|Mystery|Sci-Fi|Thriller", "stock": 3, "rate": 9 },
+    { "id": 2, "tittle": "Cop and ½", "genre": "Comedy", "stock": 2, "rate": 3 },
+    { "id": 3, "tittle": "African Queen, The", "genre": "Adventure|Comedy|Romance|War", "stock": 7, "rate": 9 },
+    { "id": 4, "tittle": "Seven Years Bad Luck", "genre": "Comedy", "stock": 3, "rate": 5 },
+    { "id": 5, "tittle": "Life After Beth", "genre": "Comedy|Horror|Romance", "stock": 1, "rate": 5 },
+    { "id": 6, "tittle": "Moving Out", "genre": "Drama", "stock": 8, "rate": 7 },
+    { "id": 7, "tittle": "Romeo Must Die", "genre": "Action|Crime|Romance|Thriller", "stock": 9, "rate": 5 },
+    { "id": 8, "tittle": "Cape Fear", "genre": "Crime|Drama|Thriller", "stock": 6, "rate": 8 },
+    { "id": 9, "tittle": "Robe, The", "genre": "Drama", "stock": 8, "rate": 6 },
+    { "id": 10, "tittle": "Seduced and Abandoned", "genre": "Comedy|Documentary", "stock": 9, "rate": 4 }]
+    const getMovies = () => {
+      return movies
+    }
+  </script>
+  <script type="text/babel">
+    class Movies extends React.Component {
+      constructor() {
+        super()
+        this.state = { movies: getMovies() }
+      }
+      deleteMovies(movieId) {
+        console.log("Hi,", movieId)
+        const movies = this.state.movies.filter((movie) => movie.id !== movieId)
+        this.setState({ movies: movies })
+      }
+      render() {
+        return (
+
+          <table>
+            Total movies {this.state.movies.length}
+            <thead>
+              <tr>
+                <td> <h1>tittle</h1></td>
+                <td> <h1>rate</h1></td>
+                <td> <h1>genre</h1></td>
+                <td> <h1>stock</h1></td>
+              </tr>
+            </thead>
+            <tbody>
+              {this.state.movies.map(x =>
+                <tr key={x.id}>
+                  <td > {x.tittle} </td>
+                  <td  > {x.rate} </td>
+                  <td  > {x.genre} </td>
+                  <td  > {x.stock} </td>
+                  <td  > <button id={x.id} onClick={() => { this.deleteMovies(x.id) }}>Delete</button> </td>
+                  </tr>
+
+
+              )}
+            </tbody>
+
+          </table >
+        )
+      }
+
+
+    }
+    ReactDOM.render(<Movies />, document.querySelector('#movies'));
+  </script>
+
+</body>
+
+</html>
