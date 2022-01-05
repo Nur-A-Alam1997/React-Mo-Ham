@@ -36,11 +36,11 @@
                 const pageNumber = Math.ceil(itemCount / itemPerPage)
                 const pages = [...Array(pageNumber).keys()].map(i => (i + 1))
                 console.log(pages, pageNumber, itemPerPage, itemCount)
-                if (pages <= 1) return null;
+                if (pages < 1) return null;
                 return (<nav aria-label="Page navigation example">
                     <ul className="pagination">
                         {pages.map(page => (
-                            <li key={page} role="button" className={page == currentPage ? "page-item active" : "page-item "}>
+                            <li key={page} className={page == currentPage ? "page-item active" : "page-item "}>
                                 <a className="page-link" onClick={() => { paginationHandler(page) }}>{page}</a>
                             </li>)
                         )}
@@ -51,6 +51,7 @@
 
     </script>
     <script type="text/babel">
+
         const Listgroup = (props) => {
             const { genre, listHandler, selectedGenre } = props
             // console.log(selectedGenre)
@@ -86,16 +87,16 @@
             return genre
         }
 
-        const movies = [{ "id": 1, "tittle": "Cave, The", "genre": "Action", "stock": 3, "rate": 9 },
-        { "id": 2, "tittle": "Cop and ½", "genre": "Comedy", "stock": 2, "rate": 3 },
-        { "id": 3, "tittle": "African Queen, The", "genre": "Comedy", "stock": 7, "rate": 9 },
-        { "id": 4, "tittle": "Seven Years Bad Luck", "genre": "Comedy", "stock": 3, "rate": 5 },
-        { "id": 5, "tittle": "Life After Beth", "genre": "Comedy", "stock": 1, "rate": 5 },
-        { "id": 6, "tittle": "Moving Out", "genre": "Action", "stock": 8, "rate": 7 },
-        { "id": 7, "tittle": "Romeo Must Die", "genre": "Thriller", "stock": 9, "rate": 5 },
-        { "id": 8, "tittle": "Cape Fear", "genre": "Thriller", "stock": 6, "rate": 8 },
-        { "id": 9, "tittle": "Robe, The", "genre": "Action", "stock": 8, "rate": 6 },
-        { "id": 10, "tittle": "Seduced and Abandoned", "genre": "Comedy", "stock": 9, "rate": 4 }]
+        const movies = [{ "id": 1, "title": "Cave, The", "genre": "Action", "stock": 3, "rate": 9 },
+        { "id": 2, "title": "Cop and ½", "genre": "Comedy", "stock": 2, "rate": 3 },
+        { "id": 3, "title": "African Queen, The", "genre": "Comedy", "stock": 7, "rate": 9 },
+        { "id": 4, "title": "Seven Years Bad Luck", "genre": "Comedy", "stock": 3, "rate": 5 },
+        { "id": 5, "title": "Life After Beth", "genre": "Comedy", "stock": 1, "rate": 5 },
+        { "id": 6, "title": "Moving Out", "genre": "Action", "stock": 8, "rate": 7 },
+        { "id": 7, "title": "Romeo Must Die", "genre": "Thriller", "stock": 9, "rate": 5 },
+        { "id": 8, "title": "Cape Fear", "genre": "Thriller", "stock": 6, "rate": 8 },
+        { "id": 9, "title": "Robe, The", "genre": "Action", "stock": 8, "rate": 6 },
+        { "id": 10, "title": "Seduced and Abandoned", "genre": "Comedy", "stock": 9, "rate": 4 }]
         const getMovies = () => {
             return movies
         }
@@ -104,10 +105,29 @@
             const moviesArray = movies.slice((currentPage - 1) * itemPerPage, (currentPage - 1) * itemPerPage + itemPerPage)
             return moviesArray
         }
+
+
+        const sort_by = (field, reverse, primer) => {
+            const key = primer ? (x) => { return primer(x[field]) } : (x) => { return x[field] };
+            reverse = !reverse ? 1 : -1;
+            return (a, b) => {
+                return a = key(a), b = key(b), reverse * ((a > b) - (b > a));
+            }
+        }
+
         class Movies extends React.Component {
             constructor() {
                 super()
-                this.state = { movies: [], genre: [], itemPerPage: 3, currentPage: 1, selectedGenre: null }
+                this.state = {
+                    movies: [],
+                    genre: [],
+                    columns: ['id', 'title', 'rate', 'genre', 'stock'],
+                    itemPerPage: 3,
+                    currentPage: 1,
+                    sortBy: 'id',
+                    icon: '▲',
+                    selectedGenre: null
+                }
             }
             componentDidMount() {
                 this.setState({ movies: getMovies(), genre: getGenre() })
@@ -124,14 +144,27 @@
             }
 
             listHandler = (genre) => {
-                this.setState({ selectedGenre: genre.genre })
+                this.setState({ selectedGenre: genre.genre, currentPage: 1 })
+            }
+            sortHandler = (sortBy) => {
+                console.log(sortBy)
+                return this.setState({ sortBy })
             }
 
             render() {
-                const { movies: allMovies, currentPage, itemPerPage, genre, selectedGenre } = this.state
+                const { movies: allMovies,
+                    currentPage,
+                    itemPerPage,
+                    sortBy,
+                    genre,
+                    selectedGenre,
+                    icon,
+                    columns,
+                } = this.state
                 const movieGenre = allMovies.filter(movie => { return (movie.genre === selectedGenre) })
-                const movieArray =selectedGenre === null ? allMovies : movieGenre
-                const movies = moviesArray(movieArray, currentPage, itemPerPage)
+                const movieArray = selectedGenre === null ? allMovies : movieGenre
+                const movieSorted = movieArray.sort(sort_by(sortBy,))
+                const movies = moviesArray(movieSorted, currentPage, itemPerPage)
                 return (
                     <div className="row m-5">
                         <div className="col-3">
@@ -146,36 +179,39 @@
                             <table className="table table-bordered">
                                 <thead className="thead-light">
                                     <tr>
-                                        <th scope="row">#</th>
-                                        <td scope="col"> <h1>Tittle</h1></td>
-                                        <td scope="col"> <h1>Rate</h1></td>
-                                        <td scope="col"> <h1>Genre</h1></td>
-                                        <td scope="col"> <h1>Stock</h1></td>
+                                        {columns.map(column => (
+                                            <th onClick={() => this.sortHandler(column)}>
+                                                <h1 style={{ cursor: 'pointer' }}> {column.toUpperCase()} {sortBy == column ? icon : ''}</h1>
+                                            </th>
+                                        ))}
                                     </tr>
                                 </thead>
                                 <tbody>
                                     {movies.map(x =>
                                         <tr key={x.id}>
-                                            <th scope="row">{x.id}</th>
-                                            <td scope="col"> {x.tittle} </td>
-                                            <td scope="col"> {x.rate} </td>
-                                            <td scope="col"> {x.genre} </td>
-                                            <td scope="col"> {x.stock} </td>
-                                            <td scope="col"> <button className="btn btn-danger badge" id={x.id} onClick={() => { this.deleteMovies(x.id) }}>Delete</button> </td>
+                                            <th >{x.id}</th>
+                                            <td> {x.title} </td>
+                                            <td> {x.rate} </td>
+                                            <td> {x.genre} </td>
+                                            <td> {x.stock} </td>
+                                            <td> <button className="btn btn-danger badge" id={x.id} onClick={() => { this.deleteMovies(x.id) }}>Delete</button> </td>
                                         </tr>
                                     )}
                                 </tbody>
 
                             </table >
                         </div>
-                        <Pagination
-                            key={movies.length}
-                            itemCount={movieArray.length}
-                            itemPerPage={itemPerPage}
-                            paginationHandler={this.paginationHandler}
-                            currentPage={currentPage}
-                        />
+                        <div>
+                            <Pagination
+                                key={movies.length}
+                                itemCount={movieArray.length}
+                                itemPerPage={itemPerPage}
+                                paginationHandler={this.paginationHandler}
+                                currentPage={currentPage}
+                            />
+                        </div>
                     </div>
+
 
                 )
             }
