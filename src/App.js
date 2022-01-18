@@ -5,7 +5,7 @@ import ClockFunction from './components/clock';
 import Counters from './components/counters';
 import Movies from './components/movies';
 import Navbar from './components/navigation';
-import { MovieForm } from './components/movieForm';
+import MovieForm  from './components/movieForm';
 function App() {
   return (
 
