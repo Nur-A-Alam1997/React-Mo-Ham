@@ -1,5 +1,5 @@
 import { Link, NavLink } from "react-router-dom"
-
+import ClockFunction from './clock'
 const Navbar = () => {
     return (
         <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -19,10 +19,11 @@ const Navbar = () => {
                         <Link className="nav-link" to="/movies">Movies</Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link disabled" to="#">Disabled</Link>
+                        <Link className="nav-link " to="/registration">Registration</Link>
                     </li>
                 </ul>
             </div>
+            <ClockFunction />
         </nav>
     )
 }
